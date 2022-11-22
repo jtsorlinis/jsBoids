@@ -8,6 +8,7 @@ const fps = 60;
 const delta = 1 / fps;
 let paused = false;
 let reeMode = false;
+let colTimer = 300;
 
 let boidSize = 2;
 let numboids = 500;
@@ -53,6 +54,7 @@ function init() {
     }
 
     if (e.code == "KeyR") {
+      colTimer = 300;
       reeMode = !reeMode;
       maxSpeed = reeMode ? 75 : 100;
       minSpeed = maxSpeed * 0.75;
@@ -90,12 +92,18 @@ function drawBoid(x, y, vx, vy) {
 
 function drawCanvas() {
   let output = "";
+  colTimer--;
   for (let y = 0; y < screenHeight; y++) {
+    if (reeMode && colTimer < 0) {
+      output += "<span style='color: hsl(" + y * 2 + ", 100%, 50%)'>";
+    } else {
+      output += "<span>";
+    }
     for (let x = 0; x < screenWidth; x++) {
       output += canvas[y][x] > 0 ? "@" : " ";
       canvas[y][x] = 0;
     }
-    output += "<br>";
+    output += "</span><br>";
   }
   document.querySelector("#app").innerHTML =
     "<pre><tt>" + output + "</tt></pre>";
