@@ -7,6 +7,7 @@ const canvas = [];
 const fps = 60;
 const delta = 1 / fps;
 let paused = false;
+let reeMode = false;
 
 let boidSize = 2;
 let numboids = 500;
@@ -49,6 +50,12 @@ function init() {
         boid.vx = Math.random() - 0.5;
         boid.vy = Math.random() - 0.5;
       });
+    }
+
+    if (e.code == "KeyR") {
+      reeMode = !reeMode;
+      maxSpeed = reeMode ? 75 : 100;
+      minSpeed = maxSpeed * 0.75;
     }
   });
 }
@@ -144,6 +151,15 @@ function update(delta) {
       boid.vx += closeX * separationFactor * delta;
       boid.vy += closeY * separationFactor * delta;
 
+      // Ree mode
+      if (reeMode) {
+        let targetPoint = ~~(i / 4.2);
+        if (targetPoint < targets.length) {
+          boid.vx += targets[targetPoint].x - boid.x;
+          boid.vy += targets[targetPoint].y - boid.y;
+        }
+      }
+
       // Limit speed
       const speed = Math.sqrt(boid.vx * boid.vx + boid.vy * boid.vy);
       if (speed > maxSpeed) {
@@ -175,6 +191,8 @@ function update(delta) {
   }
 }
 
+const targets = genReePixels();
+
 init();
 while (true) {
   let frameStart = performance.now();
@@ -182,4 +200,135 @@ while (true) {
   let frameTime = performance.now() - frameStart;
   let waitTime = delta * 1000 - frameTime;
   await new Promise((r) => setTimeout(r, waitTime > 0 ? waitTime : 0));
+}
+
+function genReePixels() {
+  let reePixels = [];
+
+  // R
+  reePixels.push({ x: 20, y: 20 });
+  reePixels.push({ x: 20, y: 30 });
+  reePixels.push({ x: 20, y: 40 });
+  reePixels.push({ x: 20, y: 50 });
+  reePixels.push({ x: 20, y: 60 });
+  reePixels.push({ x: 20, y: 70 });
+  reePixels.push({ x: 20, y: 80 });
+  reePixels.push({ x: 20, y: 90 });
+  reePixels.push({ x: 20, y: 100 });
+  reePixels.push({ x: 20, y: 110 });
+  reePixels.push({ x: 20, y: 120 });
+  reePixels.push({ x: 20, y: 130 });
+  reePixels.push({ x: 20, y: 140 });
+  reePixels.push({ x: 20, y: 150 });
+  reePixels.push({ x: 20, y: 160 });
+  reePixels.push({ x: 30, y: 20 });
+  reePixels.push({ x: 40, y: 20 });
+  reePixels.push({ x: 50, y: 20 });
+  reePixels.push({ x: 60, y: 20 });
+  reePixels.push({ x: 70, y: 22 });
+  reePixels.push({ x: 80, y: 25 });
+  reePixels.push({ x: 88, y: 30 });
+  reePixels.push({ x: 95, y: 35 });
+  reePixels.push({ x: 100, y: 42 });
+  reePixels.push({ x: 103, y: 50 });
+  reePixels.push({ x: 105, y: 60 });
+  reePixels.push({ x: 103, y: 70 });
+  reePixels.push({ x: 95, y: 78 });
+  reePixels.push({ x: 85, y: 83 });
+  reePixels.push({ x: 75, y: 84 });
+  reePixels.push({ x: 65, y: 85 });
+  reePixels.push({ x: 55, y: 85 });
+  reePixels.push({ x: 45, y: 85 });
+  reePixels.push({ x: 35, y: 85 });
+  reePixels.push({ x: 25, y: 85 });
+  reePixels.push({ x: 34, y: 95 });
+  reePixels.push({ x: 43, y: 105 });
+  reePixels.push({ x: 52, y: 115 });
+  reePixels.push({ x: 61, y: 125 });
+  reePixels.push({ x: 70, y: 135 });
+  reePixels.push({ x: 79, y: 145 });
+  reePixels.push({ x: 88, y: 160 });
+
+  // E
+  reePixels.push({ x: 150, y: 20 });
+  reePixels.push({ x: 150, y: 30 });
+  reePixels.push({ x: 150, y: 40 });
+  reePixels.push({ x: 150, y: 50 });
+  reePixels.push({ x: 150, y: 60 });
+  reePixels.push({ x: 150, y: 70 });
+  reePixels.push({ x: 150, y: 80 });
+  reePixels.push({ x: 150, y: 90 });
+  reePixels.push({ x: 150, y: 100 });
+  reePixels.push({ x: 150, y: 110 });
+  reePixels.push({ x: 150, y: 120 });
+  reePixels.push({ x: 150, y: 130 });
+  reePixels.push({ x: 150, y: 140 });
+  reePixels.push({ x: 150, y: 150 });
+  reePixels.push({ x: 150, y: 160 });
+  reePixels.push({ x: 160, y: 20 });
+  reePixels.push({ x: 170, y: 20 });
+  reePixels.push({ x: 180, y: 20 });
+  reePixels.push({ x: 190, y: 20 });
+  reePixels.push({ x: 200, y: 20 });
+  reePixels.push({ x: 210, y: 20 });
+  reePixels.push({ x: 220, y: 20 });
+  reePixels.push({ x: 230, y: 20 });
+  reePixels.push({ x: 160, y: 90 });
+  reePixels.push({ x: 170, y: 90 });
+  reePixels.push({ x: 180, y: 90 });
+  reePixels.push({ x: 190, y: 90 });
+  reePixels.push({ x: 200, y: 90 });
+  reePixels.push({ x: 210, y: 90 });
+  reePixels.push({ x: 220, y: 90 });
+  reePixels.push({ x: 230, y: 90 });
+  reePixels.push({ x: 160, y: 160 });
+  reePixels.push({ x: 170, y: 160 });
+  reePixels.push({ x: 180, y: 160 });
+  reePixels.push({ x: 190, y: 160 });
+  reePixels.push({ x: 200, y: 160 });
+  reePixels.push({ x: 210, y: 160 });
+  reePixels.push({ x: 220, y: 160 });
+  reePixels.push({ x: 230, y: 160 });
+
+  // E
+  reePixels.push({ x: 280, y: 20 });
+  reePixels.push({ x: 280, y: 30 });
+  reePixels.push({ x: 280, y: 40 });
+  reePixels.push({ x: 280, y: 50 });
+  reePixels.push({ x: 280, y: 60 });
+  reePixels.push({ x: 280, y: 70 });
+  reePixels.push({ x: 280, y: 80 });
+  reePixels.push({ x: 280, y: 90 });
+  reePixels.push({ x: 280, y: 100 });
+  reePixels.push({ x: 280, y: 110 });
+  reePixels.push({ x: 280, y: 120 });
+  reePixels.push({ x: 280, y: 130 });
+  reePixels.push({ x: 280, y: 140 });
+  reePixels.push({ x: 280, y: 150 });
+  reePixels.push({ x: 280, y: 160 });
+  reePixels.push({ x: 290, y: 20 });
+  reePixels.push({ x: 300, y: 20 });
+  reePixels.push({ x: 310, y: 20 });
+  reePixels.push({ x: 320, y: 20 });
+  reePixels.push({ x: 330, y: 20 });
+  reePixels.push({ x: 340, y: 20 });
+  reePixels.push({ x: 350, y: 20 });
+  reePixels.push({ x: 360, y: 20 });
+  reePixels.push({ x: 290, y: 90 });
+  reePixels.push({ x: 300, y: 90 });
+  reePixels.push({ x: 310, y: 90 });
+  reePixels.push({ x: 320, y: 90 });
+  reePixels.push({ x: 330, y: 90 });
+  reePixels.push({ x: 340, y: 90 });
+  reePixels.push({ x: 350, y: 90 });
+  reePixels.push({ x: 360, y: 90 });
+  reePixels.push({ x: 290, y: 160 });
+  reePixels.push({ x: 300, y: 160 });
+  reePixels.push({ x: 310, y: 160 });
+  reePixels.push({ x: 320, y: 160 });
+  reePixels.push({ x: 330, y: 160 });
+  reePixels.push({ x: 340, y: 160 });
+  reePixels.push({ x: 350, y: 160 });
+  reePixels.push({ x: 360, y: 160 });
+  return reePixels;
 }
