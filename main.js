@@ -8,6 +8,8 @@ const fps = 60;
 const delta = 1 / fps;
 let paused = false;
 let reeMode = false;
+let stillRee = true;
+let editMode = false;
 let colTimer = 300;
 
 let boidSize = 2;
@@ -27,6 +29,8 @@ let cohesionFactor = 1;
 let alignmentFactor = 5;
 let separationFactor = 30;
 
+let targets = genReePixels();
+
 function init() {
   for (let i = 0; i < numboids; i++) {
     boids.push({
@@ -41,12 +45,40 @@ function init() {
     canvas[i] = new Array(screenWidth).fill(0);
   }
 
+  window.addEventListener("mousemove", (e) => {
+    if (e.buttons == 1 && targets.length < numboids) {
+      let newVal = { x: ~~(e.x / 3.05), y: ~~(e.y / 3.85) };
+      let exists = targets.findIndex(
+        (pixel) => pixel.x === newVal.x && pixel.y === newVal.y
+      );
+      if (exists === -1) {
+        targets.push(newVal);
+        document.title = "Boids " + (numboids - targets.length);
+      }
+      console.log(targets.length);
+    }
+  });
+
   window.addEventListener("keydown", (e) => {
     e.preventDefault();
     if (e.code == "KeyP") {
       paused = !paused;
     }
+
+    if (editMode && e.code == "KeyC") {
+      targets = [];
+      stillRee = false;
+      colTimer = 1;
+      document.title = "Boids " + (numboids - targets.length);
+    }
+
+    if (e.code == "KeyE") {
+      editMode = !editMode;
+      reeMode = false;
+    }
+
     if (e.code == "Space") {
+      reeMode = false;
       boids.forEach((boid) => {
         boid.vx = Math.random() - 0.5;
         boid.vy = Math.random() - 0.5;
@@ -92,7 +124,9 @@ function drawBoid(x, y, vx, vy) {
 
 function drawCanvas() {
   let output = "";
-  colTimer--;
+  if (stillRee) {
+    colTimer--;
+  }
   for (let y = 0; y < screenHeight; y++) {
     if (reeMode && colTimer < 0) {
       output += "<span style='color: hsl(" + y * 2 + ", 100%, 50%)'>";
@@ -161,7 +195,7 @@ function update(delta) {
 
       // Ree mode
       if (reeMode) {
-        let targetPoint = ~~(i / 4.2);
+        let targetPoint = ~~(i / (numboids / targets.length));
         if (targetPoint < targets.length) {
           boid.vx += targets[targetPoint].x - boid.x;
           boid.vy += targets[targetPoint].y - boid.y;
@@ -199,12 +233,15 @@ function update(delta) {
   }
 }
 
-const targets = genReePixels();
-
 init();
 while (true) {
   let frameStart = performance.now();
-  update(delta);
+  if (editMode) {
+    targets.forEach((pixel) => setPixel(pixel.x, pixel.y));
+    drawCanvas();
+  } else {
+    update(delta);
+  }
   let frameTime = performance.now() - frameStart;
   let waitTime = delta * 1000 - frameTime;
   await new Promise((r) => setTimeout(r, waitTime > 0 ? waitTime : 0));
