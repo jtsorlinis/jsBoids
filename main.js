@@ -141,7 +141,7 @@ function drawCanvas() {
 }
 
 function update(delta) {
-  maxSpeed = reeMode ? 50 : 100;
+  maxSpeed = reeMode ? 75 : 100;
   minSpeed = maxSpeed * 0.75;
   if (!paused) {
     for (let i = 0; i < numboids; i++) {
