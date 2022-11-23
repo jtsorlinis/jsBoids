@@ -78,13 +78,14 @@ function init() {
 
     if (e.code == "Space") {
       reeMode = false;
+      editMode = false;
       boids.forEach((boid) => {
         boid.vx = Math.random() - 0.5;
         boid.vy = Math.random() - 0.5;
       });
     }
 
-    if (e.code == "KeyR") {
+    if (!editMode && e.code == "KeyR") {
       colTimer = 300;
       reeMode = !reeMode;
     }
@@ -141,8 +142,9 @@ function drawCanvas() {
 }
 
 function update(delta) {
-  maxSpeed = reeMode ? 75 : 100;
-  minSpeed = maxSpeed * 0.75;
+  if (!reeMode) {
+    maxSpeed = 100;
+  }
   if (!paused) {
     for (let i = 0; i < numboids; i++) {
       let boid = boids[i];
@@ -196,8 +198,11 @@ function update(delta) {
       if (reeMode) {
         let targetPoint = ~~(i / (numboids / targets.length));
         if (targetPoint < targets.length) {
-          boid.vx += targets[targetPoint].x - boid.x;
-          boid.vy += targets[targetPoint].y - boid.y;
+          let diffx = targets[targetPoint].x - boid.x;
+          let diffy = targets[targetPoint].y - boid.y;
+          maxSpeed = Math.min(100, Math.abs(diffx) + Math.abs(diffy));
+          boid.vx += diffx;
+          boid.vy += diffy;
         }
       }
 
