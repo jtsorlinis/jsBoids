@@ -53,6 +53,7 @@ function init() {
       );
       if (exists === -1) {
         targets.push(newVal);
+        stillRee = false;
         document.title = "Boids " + (numboids - targets.length);
       }
     }
@@ -67,7 +68,6 @@ function init() {
     if (editMode && e.code == "KeyC") {
       targets = [];
       stillRee = false;
-      colTimer = 1;
       document.title = "Boids " + (numboids - targets.length);
     }
 
@@ -87,8 +87,6 @@ function init() {
     if (e.code == "KeyR") {
       colTimer = 300;
       reeMode = !reeMode;
-      maxSpeed = reeMode ? 75 : 100;
-      minSpeed = maxSpeed * 0.75;
     }
   });
 }
@@ -123,12 +121,12 @@ function drawBoid(x, y, vx, vy) {
 
 function drawCanvas() {
   let output = "";
-  if (stillRee) {
-    colTimer--;
-  }
+  colTimer--;
   for (let y = 0; y < screenHeight; y++) {
-    if (reeMode && colTimer < 0) {
+    if (reeMode && stillRee && colTimer < 0) {
       output += "<span style='color: hsl(" + y * 2 + ", 100%, 50%)'>";
+    } else if (reeMode && !stillRee) {
+      output += "<span style='color: hsl(100, 100%, 50%)'>";
     } else {
       output += "<span>";
     }
@@ -143,6 +141,8 @@ function drawCanvas() {
 }
 
 function update(delta) {
+  maxSpeed = reeMode ? 50 : 100;
+  minSpeed = maxSpeed * 0.75;
   if (!paused) {
     for (let i = 0; i < numboids; i++) {
       let boid = boids[i];
