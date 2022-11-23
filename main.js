@@ -55,7 +55,6 @@ function init() {
         targets.push(newVal);
         document.title = "Boids " + (numboids - targets.length);
       }
-      console.log(targets.length);
     }
   });
 
